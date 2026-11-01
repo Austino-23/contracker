@@ -1,0 +1,94 @@
+{% extends 'savings/base.html' %}
+{% block title %}Dashboard | ContriTrack{% endblock %}
+{% block breadcrumb %}Dashboard{% endblock %}
+{% block content %}
+<section class="welcome-row">
+    <div><p class="eyebrow">CONTRITRACK OVERVIEW</p>
+        <h1>Welcome, {{ user.get_full_name|default:user.username }} <span class="wave">✦</span></h1>
+        <p class="muted">{% if is_admin %}Here is your savings group’s current activity.{% else %}Here is your personal contribution and payout summary.{% endif %}</p></div>{% if is_admin %}<a class="button button-primary" href="{% url 'members_contributions' %}">＋ Record contribution</a>{% endif %}</section>
+{% if messages %}
+<div class="notice"><div>{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>
+</div>{% endif %}
+<section class="stats-grid">
+    <article class="stat-card">
+        <div class="stat-top"><span class="stat-label">{% if is_admin %}Total group contributions{% else %}My total contributions{% endif %}</span><span class="stat-icon icon-purple">₦</span></div><div class="stat-value">₦{{ total_contributions|floatformat:2 }}</div><div class="stat-foot">Based on saved records</div>
+    </article>
+    <article class="stat-card">
+        <div class="stat-top"><span class="stat-label">{% if is_admin %}Active members{% else %}My member profile{% endif %}</span><span class="stat-icon icon-blue">♙</span></div><div class="stat-value">{{ member_count }}</div><div class="stat-foot">{% if is_admin %}Active savings group members{% else %}Linked member account{% endif %}</div>
+    </article>
+    <article class="stat-card">
+        <div class="stat-top"><span class="stat-label">Completed payouts</span><span class="stat-icon icon-green">✓</span></div><div class="stat-value">₦{{ completed_payout_total|floatformat:2 }}</div><div class="stat-foot">Recorded completed payouts</div>
+    </article>
+    <article class="stat-card">
+        <div class="stat-top"><span class="stat-label">Payout rounds</span><span class="stat-icon icon-orange">↻</span></div>
+        <div class="stat-value">{{ completed_rounds }} <span class="value-small">of {{ total_rounds }}</span></div>
+        <progress class="progress-track" value="{{ completed_rounds }}" max="{{ total_rounds|default:1 }}"></progress>
+        <div class="stat-foot">Rounds marked completed</div>
+    </article>
+</section>
+<section class="content-grid">
+    <article class="panel payout-panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Next scheduled payout</h2>
+                <p class="muted">Upcoming rotation</p>
+            </div>
+            <span class="round-icon">↗</span>
+        </div>{% if next_payout %}<div class="recipient">
+            <div class="recipient-avatar">{{ next_payout.recipient.full_name|slice:":2"|upper }}</div>
+            <div><strong>{{ next_payout.recipient.full_name }}</strong>
+                <span>Round {{ next_payout.round_number }}</span>
+            </div>
+        </div>
+        <div class="payout-amount"><span>Expected payout</span>
+            <strong>₦{{ next_payout.amount|floatformat:2 }}</strong>
+        </div>
+        <div class="detail-line">
+            <span>Scheduled date</span>
+            <strong>{{ next_payout.scheduled_date|date:"d M Y" }}</strong>
+        </div>{% else %}<p>No payout rounds are scheduled yet.</p>{% endif %}<a class="button button-secondary button-full" href="{% url 'rotation_payouts' %}">View payout schedule →</a>
+    </article>
+    <article class="panel payout-panel">
+        <div class="panel-heading"><div>
+            <h2>{{ group_settings.group_name }}</h2>
+            <p class="muted">Group setup</p>
+        </div>
+        <span class="panel-symbol">⚙</span>
+    </div>
+    <div class="detail-line">
+        <span>Standard contribution</span>
+        <strong>₦{{ group_settings.contribution_amount|floatformat:2 }}</strong>
+    </div>
+    <div class="detail-line">
+        <span>Frequency</span>
+        <strong>{{ group_settings.contribution_frequency }}</strong>
+    </div>
+    <div class="detail-line"><span>Start date</span>
+        <strong>{% if group_settings.start_date %}{{ group_settings.start_date|date:"d M Y" }}{% else %}Not set{% endif %}</strong>
+    </div>
+    <a class="button button-secondary button-full" href="{% url 'history_reports_settings' %}">View reports & settings →</a>
+</article>
+</section>
+<section class="panel activity-panel">
+    <div class="panel-heading"><div>
+        <h2>Recent contributions</h2>
+        <p class="muted">Latest saved contribution activity</p>
+    </div><a class="text-link" href="{% url 'members_contributions' %}">View all →</a></div>
+    <div class="table-wrap"><table>
+        <thead>
+            <tr>
+                <th>MEMBER</th>
+                <th>AMOUNT</th>
+                <th>CONTRIBUTION DATE</th>
+            </tr>
+        </thead>
+        <tbody>{% for item in recent_contributions %}<tr><td>{{ item.member.full_name }}</td>
+            <td class="amount">₦{{ item.amount|floatformat:2 }}</td>
+            <td>{{ item.contribution_date|date:"d M Y" }}</td>
+        </tr>{% empty %}<tr>
+            <td colspan="3">No contribution records yet.</td>
+        </tr>{% endfor %}</tbody>
+    </table>
+</div>
+</section>
+{% endblock %}

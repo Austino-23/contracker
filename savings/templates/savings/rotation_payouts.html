@@ -1,0 +1,24 @@
+{% extends 'savings/base.html' %}
+{% block title %}Ajo Rotation & Payouts | ContriTrack{% endblock %}
+{% block breadcrumb %}Ajo Rotation & Payouts{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">ROTATION MANAGEMENT</p><h1>Ajo Rotation & Payouts</h1><p class="muted">Manage the agreed payout order and see which rounds have been paid.</p></div></section>
+<section class="stats-grid">
+  <article class="stat-card"><div class="stat-top"><span class="stat-label">Scheduled rounds</span><span class="stat-icon icon-purple">↻</span></div><div class="stat-value">{{ total_payouts }}</div><div class="stat-foot">Rounds in this schedule</div></article>
+  <article class="stat-card"><div class="stat-top"><span class="stat-label">Rounds completed</span><span class="stat-icon icon-green">✓</span></div><div class="stat-value">{{ completed_count }}</div><div class="stat-foot">Payouts marked completed</div></article>
+  <article class="stat-card"><div class="stat-top"><span class="stat-label">Next recipient</span><span class="stat-icon icon-blue">♙</span></div><div class="stat-value">{% if next_payout %}{{ next_payout.recipient.full_name }}{% else %}—{% endif %}</div><div class="stat-foot">{% if next_payout %}Round {{ next_payout.round_number }} · {{ next_payout.scheduled_date|date:"d M Y" }}{% else %}No pending payout{% endif %}</div></article>
+  <article class="stat-card"><div class="stat-top"><span class="stat-label">Next payout amount</span><span class="stat-icon icon-orange">₦</span></div><div class="stat-value">{% if next_payout %}₦{{ next_payout.amount|floatformat:2 }}{% else %}₦0.00{% endif %}</div><div class="stat-foot">As entered by the administrator</div></article>
+</section>
+{% if is_admin %}
+<section class="panel activity-panel" id="manage-rotation"><div class="panel-heading"><div><h2>Add a payout round</h2><p class="muted">Add one member and scheduled payout at a time.</p></div></div>
+<form method="post" class="form-grid">{% csrf_token %}<input type="hidden" name="action" value="add_payout">
+  {% for field in payout_form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<small class="field-error">{{ field.errors|striptags }}</small>{% endif %}</div>{% endfor %}
+  <div class="form-actions"><button type="submit" class="button button-primary">Add payout round</button></div>
+</form></section>
+{% endif %}
+<section class="panel activity-panel"><div class="panel-heading"><div><h2>Payout schedule</h2><p class="muted">{% if is_admin %}All scheduled group payouts{% else %}Payouts assigned to your member account{% endif %}</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>ROUND</th><th>RECIPIENT</th><th>SCHEDULED DATE</th><th>AMOUNT</th><th>STATUS</th>{% if is_admin %}<th>ACTION</th>{% endif %}</tr></thead><tbody>
+{% for payout in payouts %}<tr><td>{{ payout.round_number|stringformat:"02d" }}</td><td><strong>{{ payout.recipient.full_name }}</strong></td><td>{{ payout.scheduled_date|date:"d M Y" }}</td><td>₦{{ payout.amount|floatformat:2 }}</td><td>{% if payout.status == "completed" %}<span class="status status-complete">Completed{% if payout.payout_date %} · {{ payout.payout_date|date:"d M Y" }}{% endif %}</span>{% else %}<span class="status status-pending">Scheduled</span>{% endif %}</td>{% if is_admin %}<td>{% if payout.status != "completed" %}<form method="post">{% csrf_token %}<input type="hidden" name="action" value="mark_paid"><input type="hidden" name="payout_id" value="{{ payout.pk }}"><button type="submit" class="button button-secondary" onclick="return confirm('Mark this payout as completed?')">Mark paid</button></form>{% else %}—{% endif %}</td>{% endif %}</tr>{% empty %}<tr><td colspan="6">No payout rounds have been added yet.{% if is_admin %} Use the form above to create the first round.{% endif %}</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="panel activity-panel"><div class="panel-heading"><div><h2>How rotation works</h2><p class="muted">Keep your group's agreed process clear.</p></div></div><div class="steps-grid"><div class="step-card"><span>01</span><strong>Set the order</strong><p>Add each round with the member who should receive the group pot and the scheduled date.</p></div><div class="step-card"><span>02</span><strong>Review contributions</strong><p>Check the contribution records before making a payout outside the system.</p></div><div class="step-card"><span>03</span><strong>Record the payout</strong><p>When the member has received the pot, mark that round as completed.</p></div></div></section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'savings/base.html' %}
+{% block title %}Members & Contributions | ContriTrack{% endblock %}
+{% block breadcrumb %}Members & Contributions{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">GROUP MANAGEMENT</p><h1>Members & Contributions</h1><p class="muted">Manage your group members and record their contributions.</p></div><button class="button button-primary" id="addMemberBtn">＋ Add member</button></section>
+{% if messages %}<div class="notice"><div>{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div></div>{% endif %}
+<section class="stats-grid stats-three">
+  <article class="stat-card"><div class="stat-top"><span class="stat-label">Total members</span><span class="stat-icon icon-purple">♙</span></div><div class="stat-value">{{ member_count }}</div><div class="stat-foot">Active savings group members</div></article>
+  <article class="stat-card"><div class="stat-top"><span class="stat-label">Contributions this month</span><span class="stat-icon icon-green">₦</span></div><div class="stat-value">₦{{ this_month_total|floatformat:2 }}</div><div class="stat-foot">Saved contribution records</div></article>
+  <article class="stat-card"><div class="stat-top"><span class="stat-label">Contribution records</span><span class="stat-icon icon-orange">◷</span></div><div class="stat-value">{{ contributions|length }}</div><div class="stat-foot">Latest records shown below</div></article>
+</section>
+<div class="two-column-layout">
+  <section class="panel">
+    <div class="panel-heading"><div><h2>Record contribution</h2><p class="muted">Enter the member, amount and contribution date.</p></div><span class="panel-symbol">₦</span></div>
+    <form method="post" class="form-stack">
+      {% csrf_token %}<input type="hidden" name="action" value="record_contribution">
+      <label for="id_member">Member selection</label>{{ contribution_form.member }}{% for error in contribution_form.member.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+      <label for="id_amount">Contribution amount (₦)</label>{{ contribution_form.amount }}{% for error in contribution_form.amount.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+      <label for="id_contribution_date">Contribution date</label>{{ contribution_form.contribution_date }}{% for error in contribution_form.contribution_date.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+      <button class="button button-primary button-full" type="submit">Record contribution <span>→</span></button>
+      <p class="form-note">This form contains only member selection, contribution amount and contribution date.</p>
+    </form>
+  </section>
+  <section class="panel">
+    <div class="panel-heading"><div><h2>Add a member</h2><p class="muted">Register a person in the savings group.</p></div><span class="panel-symbol">♙</span></div>
+    <form method="post" class="form-stack">
+      {% csrf_token %}<input type="hidden" name="action" value="add_member">
+      <label for="id_full_name">Full name</label>{{ member_form.full_name }}
+      <label for="id_phone">Phone number</label>{{ member_form.phone }}
+      <label for="id_email">Email address</label>{{ member_form.email }}
+      <button class="button button-secondary button-full" type="submit">Add member <span>＋</span></button>
+    </form>
+  </section>
+</div>
+
+<section class="panel activity-panel">
+  <div class="panel-heading"><div><h2>Contribution records</h2><p class="muted">Member name, amount and contribution date</p></div><div class="search-box"><span>⌕</span><input id="tableSearch" type="search" placeholder="Search members..." aria-label="Search contribution records"></div></div>
+  <div class="table-wrap"><table id="contributionTable"><thead><tr><th>MEMBER NAME</th><th>CONTRIBUTION AMOUNT</th><th>CONTRIBUTION DATE</th></tr></thead><tbody>
+  {% for item in contributions %}<tr><td><div class="table-person"><span class="person-avatar purple-person">{{ item.member.full_name|slice:":2"|upper }}</span><span><strong>{{ item.member.full_name }}</strong><small>Recorded contribution</small></span></div></td><td class="amount">₦{{ item.amount|floatformat:2 }}</td><td>{{ item.contribution_date|date:"d M Y" }}</td></tr>{% empty %}<tr><td colspan="3">No contributions have been recorded yet.</td></tr>{% endfor %}
+  </tbody></table></div>
+  <p class="table-foot">Records are saved in the SQLite database.</p>
+</section>
+{% endblock %}

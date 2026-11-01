@@ -1,0 +1,13 @@
+{% extends 'savings/base.html' %}
+{% block title %}Register | ContriTrack{% endblock %}
+{% block breadcrumb %}Registration{% endblock %}
+{% block content %}
+<div class="auth-wrap"><section class="auth-card"><a class="brand auth-brand" href="{% url 'register' %}"><span class="brand-mark">C</span><span>Contri<span class="brand-light">Track</span><small>AJO MANAGEMENT</small></span></a><p class="eyebrow">JOIN YOUR GROUP</p><h1>Create a member account</h1><p class="muted">Register to view your contribution history and payout position.</p><form method="post" class="form-stack auth-form">{% csrf_token %}
+<label for="id_username">Username</label>{{ form.username }}{% for error in form.username.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+<label for="id_full_name">Full name</label>{{ form.full_name }}{% for error in form.full_name.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+<label for="id_email">Email address</label>{{ form.email }}{% for error in form.email.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+<label for="id_phone">Phone number</label>{{ form.phone }}{% for error in form.phone.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+<label for="id_password1">Password</label>{{ form.password1 }}{% for error in form.password1.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+<label for="id_password2">Confirm password</label>{{ form.password2 }}{% for error in form.password2.errors %}<small class="error-text">{{ error }}</small>{% endfor %}
+<button class="button button-primary button-full" type="submit">Create account <span>→</span></button></form><p class="auth-bottom">Already registered? <a href="{% url 'login' %}">Sign in</a></p></section></div>
+{% endblock %}

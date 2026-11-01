@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ContriTrack helps Ajo and Esusu groups organize daily contributions, dates, and rotating savings records.">
+  <title>ContriTrack | Daily Contribution Management</title>
+  <link rel="stylesheet" href="{% static 'savings/css/landing.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{% url 'landing' %}" aria-label="ContriTrack home">
+      <span class="brand-mark">C</span>
+      <span class="brand-name">Contri<span>Track</span><small>DAILY CONTRIBUTIONS</small></span>
+    </a>
+    <nav class="header-actions" aria-label="Main navigation">
+      <a class="nav-login" href="{% url 'login' %}">Login</a>
+      <a class="button button-small" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'register' %}{% endif %}">{% if user.is_authenticated %}Open Dashboard{% else %}Get Started{% endif %}</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section-wrap">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> SIMPLE SAVINGS. CLEAR RECORDS.</div>
+        <h1>Make every contribution <span>count.</span></h1>
+        <p class="hero-description">Keep your Ajo and Esusu rotating group savings organized. Record contributions, track contribution dates, and keep your group’s records clear in one place.</p>
+        <div class="hero-actions">
+          <a class="button" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'register' %}{% endif %}">{% if user.is_authenticated %}Go to Dashboard{% else %}Get Started <span aria-hidden="true">→</span>{% endif %}</a>
+          <a class="button button-outline" href="{% url 'login' %}">Login to your account</a>
+        </div>
+        <div class="trust-note"><span class="check-mark">✓</span> One organized place for your group’s contribution records</div>
+      </div>
+      <div class="hero-visual" aria-label="Illustration of contribution tracking summary">
+        <div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
+        <div class="summary-card">
+          <div class="summary-top"><div><span class="summary-label">CONTRITRACK OVERVIEW</span><h2>Group savings</h2></div><span class="summary-icon">↗</span></div>
+          <div class="summary-highlight"><span class="highlight-icon">₦</span><div><span class="summary-label">Contribution records</span><strong>Clear and organized</strong></div></div>
+          <div class="summary-row"><span class="summary-dot dot-green"></span><span>Contribution tracking</span><strong>✓</strong></div>
+          <div class="summary-row"><span class="summary-dot dot-gold"></span><span>Contribution dates</span><strong>✓</strong></div>
+          <div class="summary-row"><span class="summary-dot dot-blue"></span><span>Rotation & payout records</span><strong>✓</strong></div>
+          <div class="summary-footer"><span class="footer-check">✓</span> Built for Ajo / Esusu groups</div>
+        </div>
+        <div class="floating-note"><span class="floating-symbol">⌁</span><span><strong>Stay organized</strong><small>Keep records easy to review</small></span></div>
+      </div>
+    </section>
+
+    <section class="features-section">
+      <div class="section-wrap">
+        <div class="section-heading"><span class="eyebrow">MADE FOR YOUR SAVINGS GROUP</span><h2>Everything clearer, from contribution to rotation.</h2><p>Useful tools to help administrators and members stay on the same page.</p></div>
+        <div class="feature-grid">
+          <article class="feature-card"><div class="feature-icon green-icon">▦</div><h3>Contribution tracking</h3><p>Keep contribution records together so administrators can review entries more easily.</p></article>
+          <article class="feature-card"><div class="feature-icon gold-icon">▣</div><h3>Contribution dates</h3><p>Record the date alongside each contribution and make the history easier to follow.</p></article>
+          <article class="feature-card"><div class="feature-icon blue-icon">≡</div><h3>Transparent records</h3><p>Make it easier to check recorded contributions and maintain a clear history.</p></article>
+          <article class="feature-card"><div class="feature-icon purple-icon">↻</div><h3>Group savings management</h3><p>Keep member details, rotation rounds, and payout information organized.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section section-wrap"><div><span class="eyebrow">START WITH A CLEARER RECORD</span><h2>Bring your contribution records together.</h2>
+      <p>Sign in to continue managing your group’s daily savings.</p></div><a class="button" href="{% url 'login' %}">Login to ContriTrack <span aria-hidden="true">→</span></a></section>
+  </main>
+
+  <footer class="site-footer"><a class="footer-brand" href="{% url 'landing' %}"><span class="brand-mark">C</span> ContriTrack</a><p>Simple savings. Clear records.</p><span>© 2026 ContriTrack</span></footer>
+</body>
+</html>

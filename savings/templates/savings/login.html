@@ -1,0 +1,6 @@
+{% extends 'savings/base.html' %}
+{% block title %}Login | ContriTrack{% endblock %}
+{% block breadcrumb %}Login{% endblock %}
+{% block content %}
+<div class="auth-wrap"><section class="auth-card"><a class="brand auth-brand" href="{% url 'login' %}"><span class="brand-mark">C</span><span>Contri<span class="brand-light">Track</span><small>AJO MANAGEMENT</small></span></a><p class="eyebrow">WELCOME BACK</p><h1>Sign in to your account</h1><p class="muted">Manage your contributions and follow your group's rotation.</p><form method="post" class="form-stack auth-form">{% csrf_token %}{% if form.non_field_errors %}<div class="notice">{{ form.non_field_errors }}</div>{% endif %}<label for="id_username">Username</label>{{ form.username }}<label for="id_password">Password</label>{{ form.password }}<button class="button button-primary button-full" type="submit">Sign in <span>→</span></button></form><p class="auth-bottom">New to the group? <a href="{% url 'register' %}">Create a member account</a></p></section></div>
+{% endblock %}

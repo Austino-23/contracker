@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ContriTrack Ajo and Esusu contribution management">
+  <title>{% block title %}ContriTrack{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'savings/css/style.css' %}">
+  <script src="{% static 'savings/js/main.js' %}" defer></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="{% url 'dashboard' %}">
+      <span class="brand-mark">C</span>
+      <span>Contri<span class="brand-light">Track</span><small>AJO MANAGEMENT</small></span>
+    </a>
+    <div class="nav-caption">WORKSPACE</div>
+    <nav class="side-nav" aria-label="Main navigation">
+      <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><span class="nav-icon">▦</span> Dashboard</a>
+      <a href="{% url 'members_contributions' %}" class="nav-link {% if request.resolver_match.url_name == 'members_contributions' %}active{% endif %}"><span class="nav-icon">♙</span> Members & Contributions</a>
+      <a href="{% url 'rotation_payouts' %}" class="nav-link {% if request.resolver_match.url_name == 'rotation_payouts' %}active{% endif %}"><span class="nav-icon">↻</span> Ajo Rotation & Payouts</a>
+      <a href="{% url 'history_reports_settings' %}" class="nav-link {% if request.resolver_match.url_name == 'history_reports_settings' %}active{% endif %}"><span class="nav-icon">▤</span> History, Reports & Settings</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="help-card"><span class="help-symbol">?</span><strong>Need a hand?</strong><p>Your savings overview, all in one place.</p></div>
+      <div class="profile-mini">
+        <div class="avatar">{{ user.username|slice:":2"|upper }}</div>
+        <div class="profile-copy"><strong>{{ user.get_full_name|default:user.username }}</strong><span>{% if user.is_staff or user.is_superuser %}Administrator{% else %}Member{% endif %}</span></div>
+        <span class="profile-dots">•••</span>
+      </div>
+      <p class="sidebar-note">Ajo / Esusu management</p>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <div class="breadcrumb">Workspace <span>/</span> <strong>{% block breadcrumb %}Dashboard{% endblock %}</strong></div>
+      <div class="topbar-right"><span class="preview-pill"><span></span> {% if user.is_authenticated %}Signed in{% else %}Welcome{% endif %}</span><div class="top-avatar">{{ user.username|slice:":2"|upper }}</div></div>
+    </header>
+    <main class="page-content">
+      {% block content %}{% endblock %}
+      <footer class="footer"><span>© 2026 ContriTrack</span><span>Simple savings. Clear records.</span></footer>
+    </main>
+  </div>
+</div>
+<div class="mobile-overlay" id="mobileOverlay"></div>
+{% if user.is_authenticated %}<form method="post" action="{% url 'logout' %}" style="display:inline;">{% csrf_token %}<button type="submit" class="button button-secondary">Log out</button></form>{% endif %}
+</body>
+</html>
