@@ -4,7 +4,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "dev-only-change-this-before-deployment"
 DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "contracker-1hm2.onrender.com"]
+ALLOWED_HOSTS = [ "contracker-1hm2.onrender.com","127.0.0.1", "localhost",]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
