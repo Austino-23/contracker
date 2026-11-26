@@ -31,6 +31,16 @@ Open http://127.0.0.1:8000/ and sign in with your administrator account. The Dja
 ## Important
 Marking a payout completed records the event; it does not transfer money or connect to a bank. The administrator should verify that the member received the money before marking it complete. Payout amount is entered manually and is not automatically calculated from contribution records.
 
+## Keep admin accounts and data on Render
+The local SQLite database is suitable for development, but Render's web-service filesystem is not persistent by default. To retain superusers and app data across restarts or deployments:
+
+1. Create a persistent PostgreSQL database on Render.
+2. Set the web service's `DATABASE_URL` environment variable to that database's internal connection URL.
+3. Redeploy and run `python manage.py migrate` against the configured database.
+4. Create a superuser on that database with `python manage.py createsuperuser`.
+
+Keep the same database and `DATABASE_URL` for future deployments. Accounts in the old SQLite database are not copied automatically; create the superuser again after switching databases. When `DATABASE_URL` is unset, the app continues to use the local `db.sqlite3` file.
+
 
 ## Phase 4 additions
 - Dashboard totals and recent contributions now come from the database.
